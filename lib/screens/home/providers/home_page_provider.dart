@@ -106,18 +106,17 @@ class HomePageProvider extends ChangeNotifier {
         .where('email', isEqualTo: _auth.currentUser!.email)
         .limit(1)
         .get();
-    if (snapshot.docs.isNotEmpty) {
-      final doc = snapshot.docs.first;
-      log(_auth.currentUser!.email!);
-      if (doc.exists) {
-        var user = await doc.reference.get();
-        _imageUrl = await user['profilePicUrl'];
-        log("Got profile pic url: $_imageUrl");
-      } else {
-        log('Doc does not exists');
+
+    final doc = snapshot.docs.first;
+    log(_auth.currentUser!.email!);
+    if (doc.exists) {
+      var user = await doc.reference.get();
+      if (user.data()!.containsKey('profilePicUrl')) {
+        _imageUrl = await user.data()!['profilePicUrl'];
+        log("Got profile pic url: $imageUrl");
       }
     } else {
-      log('Doc snapshot is empty');
+      log('Doc does not exists');
     }
   }
 

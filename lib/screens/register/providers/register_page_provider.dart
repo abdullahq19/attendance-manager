@@ -6,6 +6,7 @@ import 'package:attendance_management_system/screens/register/models/app_user.da
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class RegisterPageProvider extends ChangeNotifier with FormPagesParentProvider {
   bool isConfirmPasswordHidden = true;
@@ -19,9 +20,52 @@ class RegisterPageProvider extends ChangeNotifier with FormPagesParentProvider {
     notifyListeners();
   }
 
-  //get user uid
-  String getUserUID() {
-    return auth.currentUser!.uid;
+  // Sign Up with Google Account
+  Future<void> signUpWithGoogle(BuildContext context) async {
+    try {
+      isSigningUp = true;
+      notifyListeners();
+
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      // handling cancelling of google auth selection
+      if (googleUser == null) {
+        isSigningUp = false;
+        notifyListeners();
+        return;
+      }
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      final oAuthCredentials = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+      final googleCredentials =
+          await auth.signInWithCredential(oAuthCredentials);
+
+      if (googleCredentials.additionalUserInfo!.isNewUser) {
+        final user = googleCredentials.user;
+        final userCollection = _firestore.collection('users')
+          ..doc(googleCredentials.user!.email);
+        final newGoogleUser = AppUser(
+            uid: user!.uid,
+            name: user.displayName!,
+            email: user.email!,
+            role: 'user');
+        await userCollection.add(newGoogleUser.toMap());
+        if (context.mounted) {
+          Navigator.of(context).pushNamed(HomePage.pageName);
+        }
+      } else {
+        if (context.mounted) Navigator.of(context).pushNamed(HomePage.pageName);
+        log('Not a new user');
+      }
+    } on FirebaseAuthException catch (e) {
+      log('FirebaseAuthException: ${e.toString()}');
+    } catch (e) {
+      log('Error during Google sign in: ${e.toString()}');
+    } finally {
+      isSigningUp = false;
+      notifyListeners();
+    }
   }
 
   // create a new user with email and password
@@ -37,21 +81,13 @@ class RegisterPageProvider extends ChangeNotifier with FormPagesParentProvider {
         isSigningUp = false;
         notifyListeners();
         isAdmin = email == adminEmail && password == adminPassword;
-        final uid = getUserUID();
         final newUser = AppUser(
-            uid: uid,
+            uid: auth.currentUser!.uid,
             name: name,
             email: email,
             role: isAdmin ? 'admin' : 'user');
         final users = _firestore.collection(usersCollection);
-        await users.add(newUser.toMap()).then((value) => showModalBottomSheet(
-            context: context,
-            builder: (context) => BottomSheet(
-                onClosing: () => log('Bottom sheet closed'),
-                builder: (context) => Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Text('Signed in as $name'),
-                    ))));
+        await users.add(newUser.toMap());
       });
       return true;
     } on FirebaseAuthException catch (e) {

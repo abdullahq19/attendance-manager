@@ -117,6 +117,7 @@ class _RegisterPageState extends State<RegisterPage> {
       SizedBox(height: height * 0.03),
       const GoogleSignInButton(
         text: 'Sign up with Google',
+        isSigningUp: true,
       ),
       SizedBox(height: height * 0.05),
       const SignInPageNavigateWidget(),

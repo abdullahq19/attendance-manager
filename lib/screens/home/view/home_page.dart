@@ -23,8 +23,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Provider.of<HomePageProvider>(context, listen: false)
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await Provider.of<HomePageProvider>(context, listen: false)
           .getCurrentUserProfilePicUrl();
     });
   }

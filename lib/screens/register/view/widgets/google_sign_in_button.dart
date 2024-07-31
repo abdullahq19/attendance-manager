@@ -1,23 +1,28 @@
 import 'package:attendance_management_system/consts.dart';
+import 'package:attendance_management_system/screens/register/providers/register_page_provider.dart';
 import 'package:attendance_management_system/screens/sign%20in/providers/sign_in_page_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class GoogleSignInButton extends StatelessWidget {
-  const GoogleSignInButton({super.key, required this.text});
+  const GoogleSignInButton(
+      {super.key, required this.text, required this.isSigningUp});
 
   final String text;
+  final bool isSigningUp;
 
   @override
   Widget build(BuildContext context) {
-    final signInPageProvider =
-        Provider.of<SignInPageProvider>(context, listen: false);
+    final signInPageProvider = Provider.of<SignInPageProvider>(context);
+    final registerPageProvider = Provider.of<RegisterPageProvider>(context);
     final Size(:width, :height) = MediaQuery.sizeOf(context);
     return Align(
       alignment: Alignment.center,
       child: GestureDetector(
         onTap: () async {
-          await signInPageProvider.signInWithGoogle(context);
+          isSigningUp
+              ? await registerPageProvider.signUpWithGoogle(context)
+              : await signInPageProvider.signInWithGoogle(context);
         },
         child: Container(
             width: width * 0.9,

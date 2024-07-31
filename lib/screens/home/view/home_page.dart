@@ -1,21 +1,38 @@
+import 'dart:developer';
+
 import 'package:attendance_management_system/consts.dart';
 import 'package:attendance_management_system/screens/attendance/view/attendance_page.dart';
 import 'package:attendance_management_system/screens/home/providers/home_page_provider.dart';
+import 'package:attendance_management_system/screens/home/view/widgets/profile_pic_widget.dart';
 import 'package:attendance_management_system/screens/leaves/view/leaves_page.dart';
 import 'package:attendance_management_system/screens/sign%20in/view/sign_in.dart';
 import 'package:attendance_management_system/screens/students/view/students_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   static const String pageName = 'homePage';
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Provider.of<HomePageProvider>(context, listen: false)
+          .getCurrentUserProfilePicUrl();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    log('Home Page Build Called');
     final Size(:width, :height) = MediaQuery.sizeOf(context);
-    final homePageProvider = Provider.of<HomePageProvider>(context);
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -28,65 +45,7 @@ class HomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Stack(
-              alignment: Alignment.bottomRight,
-              children: [
-                CircleAvatar(
-                  radius: width * 0.2,
-                  backgroundColor: AppColors.white,
-                  backgroundImage: const NetworkImage(
-                      'https://static.vecteezy.com/system/resources/thumbnails/005/129/844/small_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg'),
-                ),
-                IconButton.filled(
-                    color: AppColors.white,
-                    style: const ButtonStyle(
-                        backgroundColor:
-                            WidgetStatePropertyAll(AppColors.grey)),
-                    onPressed: () async {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                              actions: [
-                                TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                                    child: const Text('Cancel')),
-                                TextButton(
-                                    onPressed: () {
-                                      //todo image upload to storage
-                                    },
-                                    child: const Text('OK')),
-                              ],
-                              title: const Text('Upload a profile picture'),
-                              content: Container(
-                                width: width * 0.9,
-                                height: height * 0.3,
-                                decoration: BoxDecoration(
-                                    border: Border.all(),
-                                    borderRadius:
-                                        BorderRadius.circular(width * 0.05)),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Text('Upload an image'),
-                                    SizedBox(
-                                      height: height * 0.005,
-                                    ),
-                                    IconButton(
-                                        onPressed: () {},
-                                        icon: const Icon(
-                                            Icons.add_photo_alternate_rounded))
-                                  ],
-                                ),
-                              ));
-                        },
-                      );
-                    },
-                    icon: const Icon(Icons.camera_alt_rounded)),
-              ],
-            ),
+            const ProfilePicWidget(),
             SizedBox(height: height * 0.05),
             SizedBox(
               width: width * 0.7,
@@ -154,6 +113,8 @@ class HomePage extends StatelessWidget {
                         shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)))),
                     onPressed: () async {
+                      final homePageProvider =
+                          Provider.of<HomePageProvider>(context, listen: false);
                       await homePageProvider.signOut().then((value) =>
                           Navigator.of(context)
                               .pushReplacementNamed(SignInPage.pageName));

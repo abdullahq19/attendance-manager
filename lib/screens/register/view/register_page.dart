@@ -91,7 +91,9 @@ class _RegisterPageState extends State<RegisterPage> {
       UserNamefields(
           firstNameController: firstNameController,
           lastNameController: lastNameController),
-      EmailField(emailController: emailController),
+      EmailField(
+        emailController: emailController,
+      ),
       PasswordField(
         passwordController: passwordController,
         isSignUpPasswordField: true,
@@ -113,7 +115,9 @@ class _RegisterPageState extends State<RegisterPage> {
         height: height * 0.07,
       ),
       SizedBox(height: height * 0.03),
-      const GoogleSignInButton(text: 'Sign up with Google',),
+      const GoogleSignInButton(
+        text: 'Sign up with Google',
+      ),
       SizedBox(height: height * 0.05),
       const SignInPageNavigateWidget(),
       SizedBox(height: height * 0.04)

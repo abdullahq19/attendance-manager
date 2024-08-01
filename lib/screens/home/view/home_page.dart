@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:attendance_management_system/consts.dart';
+import 'package:attendance_management_system/screens/attendance/providers/attendance_page_provider.dart';
 import 'package:attendance_management_system/screens/attendance/view/attendance_page.dart';
 import 'package:attendance_management_system/screens/home/providers/home_page_provider.dart';
 import 'package:attendance_management_system/screens/home/view/widgets/profile_pic_widget.dart';
@@ -23,8 +24,12 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      await Provider.of<HomePageProvider>(context, listen: false)
+    // Disables the MarkAttendanceButton funcionality if attendance already marked for current day
+    Provider.of<AttendancePageProvider>(context, listen: false)
+        .checkAttendanceStatus();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      // Fetches the current user profile pic from firestore if exists
+      Provider.of<HomePageProvider>(context, listen: false)
           .getCurrentUserProfilePicUrl();
     });
   }

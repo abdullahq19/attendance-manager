@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:attendance_management_system/firebase_options.dart';
 import 'package:attendance_management_system/routes/routes.dart';
+import 'package:attendance_management_system/screens/attendance/providers/attendance_page_provider.dart';
 import 'package:attendance_management_system/screens/forgot%20password/providers/forgot_pass_page_provider.dart';
 import 'package:attendance_management_system/screens/home/providers/home_page_provider.dart';
 import 'package:attendance_management_system/screens/home/view/home_page.dart';
@@ -37,6 +38,9 @@ void main() async {
     ),
     ChangeNotifierProvider(
       create: (context) => ForgotPassPageProvider(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => AttendancePageProvider(),
     )
   ], child: const MyApp()));
 }

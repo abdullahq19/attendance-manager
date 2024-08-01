@@ -1,3 +1,4 @@
+import 'package:attendance_management_system/screens/attendance/view/attendance_page.dart';
 import 'package:flutter/material.dart';
 
 class AppColors {
@@ -42,3 +43,21 @@ const adminEmail = 'admin123@admin.com';
 const adminPassword = 'Admin123';
 const defaultImageUrl =
     'https://static.vecteezy.com/system/resources/thumbnails/005/129/844/small_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg';
+
+//global function for getting month by month number
+String getMonth() {
+  return switch (currentdateTime.month) {
+    1 => 'January',
+    2 => 'February',
+    3 => 'March',
+    4 => 'April',
+    5 => 'May',
+    6 => 'June',
+    7 => 'July',
+    8 => 'August',
+    9 => 'September',
+    10 => 'October',
+    11 => 'November',
+    _ => 'December'
+  };
+}

@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:attendance_management_system/consts.dart';
 import 'package:attendance_management_system/screens/attendance/providers/attendance_page_provider.dart';
 import 'package:attendance_management_system/screens/attendance/view/attendance_page.dart';

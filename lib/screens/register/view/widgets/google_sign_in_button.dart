@@ -13,8 +13,8 @@ class GoogleSignInButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final signInPageProvider = Provider.of<SignInPageProvider>(context);
-    final registerPageProvider = Provider.of<RegisterPageProvider>(context);
+    final signInPageProvider = Provider.of<SignInPageProvider>(context, listen: false);
+    final registerPageProvider = Provider.of<RegisterPageProvider>(context, listen: false);
     final Size(:width, :height) = MediaQuery.sizeOf(context);
     return Align(
       alignment: Alignment.center,

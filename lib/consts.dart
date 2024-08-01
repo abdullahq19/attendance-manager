@@ -1,4 +1,3 @@
-import 'package:attendance_management_system/screens/attendance/view/attendance_page.dart';
 import 'package:flutter/material.dart';
 
 class AppColors {
@@ -44,6 +43,8 @@ const adminPassword = 'Admin123';
 const defaultImageUrl =
     'https://static.vecteezy.com/system/resources/thumbnails/005/129/844/small_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg';
 
+//Current DateTime
+final currentdateTime = DateTime.now();
 //global function for getting month by month number
 String getMonth() {
   return switch (currentdateTime.month) {

@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'package:attendance_management_system/consts.dart';
-import 'package:attendance_management_system/screens/attendance/view/attendance_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +10,8 @@ class AttendancePageProvider extends ChangeNotifier {
   bool isMarkingPresent = false;
   bool isMarkingAbsent = false;
   bool isMarkedForToday = false;
-
+  
+  // Mark attendance as present or absent
   Future<void> markAttendance(bool isAbsent) async {
     try {
       final attendanceRef = _firestore

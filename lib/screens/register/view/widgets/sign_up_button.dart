@@ -75,13 +75,12 @@ class SignUpButton extends StatelessWidget {
         if (formKey.currentState!.validate()) {
           log('Validated');
           final isSignedUp = await registerPageProvider.registerUser(
-              emailController.text,
-              passwordController.text,
-              "${firstNameController.text} ${lastNameController.text}",
+              emailController.text.trim(),
+              passwordController.text.trim(),
+              "${firstNameController.text.trim()} ${lastNameController.text.trim()}",
               isAdmin,
               context);
           log('isSignedUp before evaluation: ${isSignedUp.toString()}');
-          //NOTE: THIS DOES NOT WORK, AS AFTER SIGNING UP FIELDS DO NOT CLEAR
           if (isSignedUp) {
             firstNameController.clear();
             lastNameController.clear();

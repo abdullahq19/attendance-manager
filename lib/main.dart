@@ -18,7 +18,7 @@ String initialRoute = SignInPage.pageName;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  FirebaseAuth.instance.authStateChanges().listen((user) {
+  FirebaseAuth.instance.authStateChanges().listen((user) async{
     if (user == null) {
       log('User is not signed in');
     } else {

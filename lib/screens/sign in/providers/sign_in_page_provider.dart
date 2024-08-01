@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'package:attendance_management_system/screens/form_pages_parent_provider.dart';
 import 'package:attendance_management_system/screens/home/providers/home_page_provider.dart';
 import 'package:attendance_management_system/screens/home/view/home_page.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -12,7 +11,6 @@ class SignInPageProvider extends ChangeNotifier with FormPagesParentProvider {
   bool isSigningIn = false;
   String? _errorText;
   String? get errorText => _errorText;
-  final _firestore = FirebaseFirestore.instance;
 
   // create a new user with email and password
   Future<void> signInWithEmailPassword(

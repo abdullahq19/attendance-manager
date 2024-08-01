@@ -29,4 +29,17 @@ extension Validation on String {
     }
     return null;
   }
+
+  String? validateEmailForForgotPasswordField() {
+    if (contains(RegExp(r'[A-Z]'))) {
+      return 'Email cannot contain a capital letter';
+    } else if (!contains('@gmail')) {
+      return 'Email should be of a verified Gmail account';
+    } else if (contains('@gmail') && !contains('.')) {
+      return 'Email should contain "."';
+    } else if (contains('@') && contains('.') && !endsWith('.com')) {
+      return 'Please write a valid domain name';
+    }
+    return null;
+  }
 }

@@ -17,23 +17,31 @@ class SendEmailVerificationButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final forgotPasswordPageProvider =
-        Provider.of<ForgotPassPageProvider>(context);
-    return Align(
-      alignment: Alignment.center,
-      child: AppCommonButton(
-        onPressed: () async {
-          await forgotPasswordPageProvider.forgotPass(emailController.text);
-          emailController.clear();
-        },
-        width: width,
-        color: AppColors.appButtonBackgroundColor,
-        height: height,
-        child: Text(
-          'Send email',
-          style: Theme.of(context).textTheme.titleSmall,
-        ),
-      ),
+    return Consumer<ForgotPassPageProvider>(
+      builder: (context, forgotPasswordPageProvider, child) {
+        return Align(
+          alignment: Alignment.center,
+          child: AppCommonButton(
+            onPressed: () async {
+              await forgotPasswordPageProvider.forgotPass(
+                  emailController.text, context);
+              emailController.clear();
+            },
+            width: width,
+            color: AppColors.appButtonBackgroundColor,
+            height: height,
+            child: forgotPasswordPageProvider.sendingEmail
+                ? const CircularProgressIndicator(color: Colors.green)
+                : Text(
+                    'Send email',
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleSmall
+                        ?.copyWith(color: Colors.green),
+                  ),
+          ),
+        );
+      },
     );
   }
 }

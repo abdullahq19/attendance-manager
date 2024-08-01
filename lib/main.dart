@@ -21,6 +21,7 @@ void main() async {
   FirebaseAuth.instance.authStateChanges().listen((user) async{
     if (user == null) {
       log('User is not signed in');
+      initialRoute = SignInPage.pageName;
     } else {
       log('User signed in => uid: ${user.uid}');
       initialRoute = HomePage.pageName;

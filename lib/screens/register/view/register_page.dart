@@ -1,7 +1,7 @@
 import 'package:attendance_management_system/screens/register/providers/register_page_provider.dart';
 import 'package:attendance_management_system/screens/register/view/widgets/confirm_password_field.dart';
 import 'package:attendance_management_system/screens/register/view/widgets/email_field.dart';
-import 'package:attendance_management_system/screens/register/view/widgets/google_sign_in_button.dart';
+import 'package:attendance_management_system/screens/register/view/widgets/google_sign_up_button.dart';
 import 'package:attendance_management_system/screens/register/view/widgets/password_field.dart';
 import 'package:attendance_management_system/screens/register/view/widgets/sign_in_page_navigate.dart';
 import 'package:attendance_management_system/screens/register/view/widgets/sign_up_button.dart';
@@ -115,10 +115,7 @@ class _RegisterPageState extends State<RegisterPage> {
         height: height * 0.07,
       ),
       SizedBox(height: height * 0.03),
-      const GoogleSignInButton(
-        text: 'Sign up with Google',
-        isSigningUp: true,
-      ),
+      const GoogleSignUpButton(),
       SizedBox(height: height * 0.05),
       const SignInPageNavigateWidget(),
       SizedBox(height: height * 0.04)

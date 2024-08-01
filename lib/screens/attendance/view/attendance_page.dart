@@ -2,26 +2,12 @@ import 'package:attendance_management_system/consts.dart';
 import 'package:attendance_management_system/screens/attendance/view/widgets/mark_absent_button.dart';
 import 'package:attendance_management_system/screens/attendance/view/widgets/mark_present_button.dart';
 import 'package:attendance_management_system/screens/attendance/view/widgets/username_text.dart';
-import 'package:attendance_management_system/screens/register/providers/register_page_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class AttendancePage extends StatefulWidget {
+class AttendancePage extends StatelessWidget {
   const AttendancePage({super.key});
 
   static const String pagename = 'attendancePage';
-
-  @override
-  State<AttendancePage> createState() => _AttendancePageState();
-}
-
-class _AttendancePageState extends State<AttendancePage> {
-  @override
-  void initState() {
-    super.initState();
-    Provider.of<RegisterPageProvider>(context, listen: false)
-        .getCurrentUsername();
-  }
 
   @override
   Widget build(BuildContext context) {

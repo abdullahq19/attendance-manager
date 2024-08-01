@@ -14,7 +14,7 @@ class ForgotPasswordField extends StatelessWidget {
           if (email == null || email.isEmpty) {
             return 'Please enter a email';
           } else {
-            return email.validateEmail();
+            return email.validateEmailForForgotPasswordField();
           }
         },
         keyboardType: TextInputType.emailAddress,

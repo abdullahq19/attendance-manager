@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 class SignInPageProvider extends ChangeNotifier with FormPagesParentProvider {
   bool isSigningIn = false;
+  bool isSigningInWithGoogle = false;
   String? _errorText;
   String? get errorText => _errorText;
 
@@ -49,23 +50,24 @@ class SignInPageProvider extends ChangeNotifier with FormPagesParentProvider {
     final homePageProvider =
         Provider.of<HomePageProvider>(context, listen: false);
     try {
-      isSigningIn = true;
+      isSigningInWithGoogle = true;
       notifyListeners();
 
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       // handling cancelling of google auth selection
       if (googleUser == null) {
-        isSigningIn = false;
+        isSigningInWithGoogle = false;
         notifyListeners();
-        return;
       }
 
       final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+          await googleUser!.authentication;
       final oAuthCredentials = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
       await auth.signInWithCredential(oAuthCredentials);
       await homePageProvider.getCurrentUserProfilePicUrl();
+      isSigningInWithGoogle = false;
+      notifyListeners();
       if (context.mounted) {
         Navigator.of(context).pushNamed(HomePage.pageName);
       }

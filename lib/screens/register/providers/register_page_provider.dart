@@ -12,6 +12,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 class RegisterPageProvider extends ChangeNotifier with FormPagesParentProvider {
   bool isConfirmPasswordHidden = true;
   bool isSigningUp = false;
+  bool isSigningUpWithGoogle = false;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   static const String usersCollection = 'users';
   String? currentUsername = '';
@@ -25,19 +26,18 @@ class RegisterPageProvider extends ChangeNotifier with FormPagesParentProvider {
   // Sign Up with Google Account
   Future<void> signUpWithGoogle(BuildContext context) async {
     try {
-      isSigningUp = true;
+      isSigningUpWithGoogle = true;
       notifyListeners();
 
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       // handling cancelling of google auth selection
       if (googleUser == null) {
-        isSigningUp = false;
+        isSigningUpWithGoogle = false;
         notifyListeners();
-        return;
       }
 
       final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+          await googleUser!.authentication;
       final oAuthCredentials = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
       final googleCredentials =
@@ -53,6 +53,8 @@ class RegisterPageProvider extends ChangeNotifier with FormPagesParentProvider {
             email: user.email!,
             role: 'user');
         await userCollection.add(newGoogleUser.toMap());
+        isSigningUpWithGoogle = false;
+        notifyListeners();
         if (context.mounted) {
           Navigator.of(context).pushNamed(HomePage.pageName);
         }

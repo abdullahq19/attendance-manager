@@ -1,9 +1,9 @@
 import 'package:attendance_management_system/consts.dart';
 import 'package:attendance_management_system/screens/register/view/widgets/divider_row.dart';
 import 'package:attendance_management_system/screens/register/view/widgets/email_field.dart';
-import 'package:attendance_management_system/screens/register/view/widgets/google_sign_in_button.dart';
 import 'package:attendance_management_system/screens/register/view/widgets/password_field.dart';
 import 'package:attendance_management_system/screens/sign%20in/view/widgets/forgot_password_button.dart';
+import 'package:attendance_management_system/screens/sign%20in/view/widgets/google_sign_in_button.dart';
 import 'package:attendance_management_system/screens/sign%20in/view/widgets/sign_in_button.dart';
 import 'package:attendance_management_system/screens/sign%20in/view/widgets/sign_in_page_heading1.dart';
 import 'package:attendance_management_system/screens/sign%20in/view/widgets/sign_in_page_heading2.dart';
@@ -83,10 +83,7 @@ class _SignInPageState extends State<SignInPage> {
       SizedBox(height: height * 0.05),
       const DividerRow(),
       SizedBox(height: height * 0.05),
-      const GoogleSignInButton(
-        text: 'Sign in with Google',
-        isSigningUp: false,
-      ),
+      const GoogleSignInButton(),
       SizedBox(height: height * 0.05),
       const RegisterPageNavigateWidget(),
     ];

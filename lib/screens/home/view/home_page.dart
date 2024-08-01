@@ -1,12 +1,13 @@
 import 'dart:developer';
 import 'package:attendance_management_system/consts.dart';
 import 'package:attendance_management_system/screens/attendance/providers/attendance_page_provider.dart';
-import 'package:attendance_management_system/screens/attendance/view/attendance_page.dart';
 import 'package:attendance_management_system/screens/home/providers/home_page_provider.dart';
+import 'package:attendance_management_system/screens/home/view/widgets/home_to_attendance_page.dart';
+import 'package:attendance_management_system/screens/home/view/widgets/home_to_leaves_page.dart';
+import 'package:attendance_management_system/screens/home/view/widgets/home_to_students_page.dart';
 import 'package:attendance_management_system/screens/home/view/widgets/profile_pic_widget.dart';
-import 'package:attendance_management_system/screens/leaves/view/leaves_page.dart';
+import 'package:attendance_management_system/screens/register/providers/register_page_provider.dart';
 import 'package:attendance_management_system/screens/sign%20in/view/sign_in.dart';
-import 'package:attendance_management_system/screens/students/view/students_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,6 +27,9 @@ class _HomePageState extends State<HomePage> {
     // Disables the MarkAttendanceButton funcionality if attendance already marked for current day
     Provider.of<AttendancePageProvider>(context, listen: false)
         .checkAttendanceStatus();
+    // Gets current user's name from firestore if email is not verified
+    Provider.of<RegisterPageProvider>(context, listen: false)
+        .getCurrentUsername();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       // Fetches the current user profile pic from firestore if exists
       Provider.of<HomePageProvider>(context, listen: false)
@@ -86,7 +90,7 @@ class _HomePageState extends State<HomePage> {
                       shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)))),
                   onPressed: () {
-                    //Navigate to leaves page
+                    //Navigate to students page
                   },
                   child: Align(
                     alignment: Alignment.centerLeft,
@@ -133,103 +137,15 @@ class _HomePageState extends State<HomePage> {
       body: Center(
           child: Column(
         children: [
-          GestureDetector(
-            onTap: () =>
-                Navigator.of(context).pushNamed(AttendancePage.pagename),
-            child: Container(
-              width: width * 0.9,
-              height: height * 0.1,
-              padding: EdgeInsets.all(width * 0.05),
-              decoration: BoxDecoration(
-                  color: AppColors.textFieldFillColor,
-                  borderRadius: BorderRadius.circular(15)),
-              child: Row(
-                children: [
-                  const Text(
-                    '🗓️',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  SizedBox(
-                    width: width * 0.03,
-                  ),
-                  Text(
-                    'Attendance',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  SizedBox(
-                    width: width * 0.4,
-                  ),
-                  const Icon(Icons.arrow_forward),
-                ],
-              ),
-            ),
-          ),
+          const HomeToAttendancePage(),
           SizedBox(
             height: height * 0.01,
           ),
-          GestureDetector(
-            onTap: () => Navigator.of(context).pushNamed(LeavesPage.pagename),
-            child: Container(
-              width: width * 0.9,
-              height: height * 0.1,
-              padding: EdgeInsets.all(width * 0.05),
-              decoration: BoxDecoration(
-                  color: AppColors.textFieldFillColor,
-                  borderRadius: BorderRadius.circular(15)),
-              child: Row(
-                children: [
-                  const Text(
-                    '📝',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  SizedBox(
-                    width: width * 0.03,
-                  ),
-                  Text(
-                    'Leaves',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  SizedBox(
-                    width: width * 0.48,
-                  ),
-                  const Icon(Icons.arrow_forward),
-                ],
-              ),
-            ),
-          ),
+          const HomeToLeavesPage(),
           SizedBox(
             height: height * 0.01,
           ),
-          GestureDetector(
-            onTap: () => Navigator.of(context).pushNamed(StudentsPage.pageName),
-            child: Container(
-              width: width * 0.9,
-              height: height * 0.1,
-              padding: EdgeInsets.all(width * 0.05),
-              decoration: BoxDecoration(
-                  color: AppColors.textFieldFillColor,
-                  borderRadius: BorderRadius.circular(15)),
-              child: Row(
-                children: [
-                  const Text(
-                    '👨‍🎓',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  SizedBox(
-                    width: width * 0.03,
-                  ),
-                  Text(
-                    'Students',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  SizedBox(
-                    width: width * 0.45,
-                  ),
-                  const Icon(Icons.arrow_forward),
-                ],
-              ),
-            ),
-          ),
+          const HomeToStudentsPage(),
         ],
       )),
     );

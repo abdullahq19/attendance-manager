@@ -8,6 +8,7 @@ import 'package:attendance_management_system/screens/home/view/home_page.dart';
 import 'package:attendance_management_system/screens/register/providers/register_page_provider.dart';
 import 'package:attendance_management_system/screens/sign%20in/providers/sign_in_page_provider.dart';
 import 'package:attendance_management_system/screens/sign%20in/view/sign_in.dart';
+import 'package:attendance_management_system/screens/students/providers/student_page_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ String initialRoute = SignInPage.pageName;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  FirebaseAuth.instance.authStateChanges().listen((user) async{
+  FirebaseAuth.instance.authStateChanges().listen((user) async {
     if (user == null) {
       log('User is not signed in');
       initialRoute = SignInPage.pageName;
@@ -42,6 +43,9 @@ void main() async {
     ),
     ChangeNotifierProvider(
       create: (context) => AttendancePageProvider(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => StudentPageProvider(),
     )
   ], child: const MyApp()));
 }

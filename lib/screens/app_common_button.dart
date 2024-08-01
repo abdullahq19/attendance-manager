@@ -7,6 +7,7 @@ class AppCommonButton extends StatelessWidget {
       this.height,
       this.color,
       required this.child,
+      this.borderRadius = 15,
       required this.onPressed});
 
   final double width;
@@ -14,6 +15,7 @@ class AppCommonButton extends StatelessWidget {
   final Widget child;
   final Color? color;
   final Function()? onPressed;
+  final double borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,7 @@ class AppCommonButton extends StatelessWidget {
         child: CupertinoButton(
             onPressed: onPressed,
             color: color,
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(borderRadius),
             child: child));
   }
 }

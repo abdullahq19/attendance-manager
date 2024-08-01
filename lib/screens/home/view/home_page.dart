@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:attendance_management_system/consts.dart';
 import 'package:attendance_management_system/screens/attendance/providers/attendance_page_provider.dart';
 import 'package:attendance_management_system/screens/home/providers/home_page_provider.dart';
+import 'package:attendance_management_system/screens/home/view/widgets/drawer_username_text.dart';
 import 'package:attendance_management_system/screens/home/view/widgets/home_to_attendance_page.dart';
 import 'package:attendance_management_system/screens/home/view/widgets/home_to_leaves_page.dart';
 import 'package:attendance_management_system/screens/home/view/widgets/home_to_students_page.dart';
@@ -54,7 +55,11 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const ProfilePicWidget(),
-            SizedBox(height: height * 0.05),
+            SizedBox(
+              height: height * 0.03,
+            ),
+            const DrawerUsernameText(),
+            SizedBox(height: height * 0.03),
             SizedBox(
               width: width * 0.7,
               child: TextButton(

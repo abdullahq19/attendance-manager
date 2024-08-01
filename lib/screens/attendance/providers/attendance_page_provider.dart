@@ -10,31 +10,61 @@ class AttendancePageProvider extends ChangeNotifier {
   bool isMarkingPresent = false;
   bool isMarkingAbsent = false;
   bool isMarkedForToday = false;
-  
+
   // Mark attendance as present or absent
   Future<void> markAttendance(bool isAbsent) async {
     try {
+      final userEmail = _auth.currentUser!.email;
+      final year = currentdateTime.year.toString();
+      final month = getMonth();
+      final day = currentdateTime.day.toString();
+
+      // Reference to individual student's attendance
       final attendanceRef = _firestore
           .collection('attendance')
-          .doc(_auth.currentUser!.email)
-          .collection(currentdateTime.year.toString())
-          .doc(getMonth())
-          .collection(currentdateTime.day.toString())
+          .doc(userEmail)
+          .collection(year)
+          .doc(month)
+          .collection(day)
           .doc('attendance-status');
 
-      // If an attendance record already exists for current day then set isMarkedForToday true so buttons can become disable
+      // Reference to daily attendance
+      final summaryRef = _firestore
+          .collection('daily-attendance')
+          .doc(year)
+          .collection(month)
+          .doc(day);
+
+      // Check if attendance already marked
       final doc = await attendanceRef.get();
       if (doc.exists) {
         isMarkedForToday = true;
         notifyListeners();
         return;
       }
+
       isAbsent ? isMarkingAbsent = true : isMarkingPresent = true;
       notifyListeners();
-      await attendanceRef.set({
+
+      // Use a batch to update both documents atomically
+      WriteBatch batch = _firestore.batch();
+
+      // Update individual attendance
+      batch.set(attendanceRef, {
         'status': isAbsent ? 'absent' : 'present',
         'timestamp': FieldValue.serverTimestamp(),
       });
+
+      // Update daily summary
+      batch.set(
+          summaryRef,
+          {
+            'markedStudents': FieldValue.arrayUnion([userEmail])
+          },
+          SetOptions(merge: true));
+
+      await batch.commit();
+
       isAbsent ? isMarkingAbsent = false : isMarkingPresent = false;
       notifyListeners();
       await checkAttendanceStatus();

@@ -5,6 +5,8 @@ import 'package:attendance_management_system/screens/attendance/providers/attend
 import 'package:attendance_management_system/screens/forgot%20password/providers/forgot_pass_page_provider.dart';
 import 'package:attendance_management_system/screens/home/providers/home_page_provider.dart';
 import 'package:attendance_management_system/screens/home/view/home_page.dart';
+import 'package:attendance_management_system/screens/leaves/providers/leave_page_provider.dart';
+import 'package:attendance_management_system/screens/my%20leaves/providers/my_leaves_provider.dart';
 import 'package:attendance_management_system/screens/register/providers/register_page_provider.dart';
 import 'package:attendance_management_system/screens/sign%20in/providers/sign_in_page_provider.dart';
 import 'package:attendance_management_system/screens/sign%20in/view/sign_in.dart';
@@ -46,7 +48,13 @@ void main() async {
     ),
     ChangeNotifierProvider(
       create: (context) => StudentPageProvider(),
-    )
+    ),
+    ChangeNotifierProvider(
+      create: (context) => LeavePageProvider(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => MyLeavesProvider(),
+    ),
   ], child: const MyApp()));
 }
 

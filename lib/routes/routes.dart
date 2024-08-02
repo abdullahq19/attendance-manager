@@ -3,6 +3,7 @@ import 'package:attendance_management_system/screens/error/view/error_page.dart'
 import 'package:attendance_management_system/screens/forgot%20password/view/forgot_password_page.dart';
 import 'package:attendance_management_system/screens/home/view/home_page.dart';
 import 'package:attendance_management_system/screens/leaves/view/leaves_page.dart';
+import 'package:attendance_management_system/screens/my%20leaves/view/my_leaves_page.dart';
 import 'package:attendance_management_system/screens/register/view/register_page.dart';
 import 'package:attendance_management_system/screens/sign%20in/view/sign_in.dart';
 import 'package:attendance_management_system/screens/students/view/students_page.dart';
@@ -25,6 +26,8 @@ class Routes {
         MaterialPageRoute(builder: (context) => const LeavesPage()),
       StudentsPage.pageName =>
         MaterialPageRoute(builder: (context) => const StudentsPage()),
+      MyLeavesPage.pageName =>
+        MaterialPageRoute(builder: (context) => const MyLeavesPage()),
       _ => MaterialPageRoute(
           builder: (context) => const ErrorPage(),
         )

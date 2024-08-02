@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:attendance_management_system/consts.dart';
 import 'package:attendance_management_system/screens/students/models/marked_students.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,6 +9,7 @@ class StudentPageProvider extends ChangeNotifier {
   bool fetchingUserInfo = false;
   List<MarkedStudents> students = [];
 
+  // Gets all the students info that marked attendance today
   Future<void> getStudentsMarkedTodayWithInfo() async {
     try {
       final year = currentdateTime.year.toString();
@@ -25,6 +25,7 @@ class StudentPageProvider extends ChangeNotifier {
 
       if (summaryDoc.exists) {
         fetchingUserInfo = true;
+        notifyListeners();
         Map<String, dynamic> data = summaryDoc.data() as Map<String, dynamic>;
         List<String> markedEmails =
             List<String>.from(data['markedStudents'] ?? []);
@@ -70,6 +71,7 @@ class StudentPageProvider extends ChangeNotifier {
         }));
         fetchingUserInfo = false;
         log(students.toString());
+        notifyListeners();
       } else {
         students = [];
         log('No attendance summary found for today');

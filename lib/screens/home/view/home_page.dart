@@ -7,6 +7,8 @@ import 'package:attendance_management_system/screens/home/view/widgets/home_to_a
 import 'package:attendance_management_system/screens/home/view/widgets/home_to_leaves_page.dart';
 import 'package:attendance_management_system/screens/home/view/widgets/home_to_students_page.dart';
 import 'package:attendance_management_system/screens/home/view/widgets/profile_pic_widget.dart';
+import 'package:attendance_management_system/screens/leaves/providers/leave_page_provider.dart';
+import 'package:attendance_management_system/screens/my%20leaves/view/my_leaves_page.dart';
 import 'package:attendance_management_system/screens/register/providers/register_page_provider.dart';
 import 'package:attendance_management_system/screens/sign%20in/view/sign_in.dart';
 import 'package:flutter/material.dart';
@@ -28,9 +30,15 @@ class _HomePageState extends State<HomePage> {
     // Disables the MarkAttendanceButton funcionality if attendance already marked for current day
     Provider.of<AttendancePageProvider>(context, listen: false)
         .checkAttendanceStatus();
+
     // Gets current user's name from firestore if email is not verified
     Provider.of<RegisterPageProvider>(context, listen: false)
         .getCurrentUsername();
+
+    // Checks if a leave request for current user exists
+    Provider.of<LeavePageProvider>(context, listen: false)
+        .checkLeaveRequestForToday();
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       // Fetches the current user profile pic from firestore if exists
       Provider.of<HomePageProvider>(context, listen: false)
@@ -70,13 +78,12 @@ class _HomePageState extends State<HomePage> {
                           WidgetStatePropertyAll(AppColors.textFieldFillColor),
                       shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)))),
-                  onPressed: () {
-                    //Navigate to leaves page
-                  },
+                  onPressed: () =>
+                      Navigator.of(context).pushNamed(MyLeavesPage.pageName),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'L E A V E S',
+                      'M Y  L E A V E S',
                       style: Theme.of(context).textTheme.labelLarge,
                     ),
                   )),
@@ -84,27 +91,7 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               height: height * 0.01,
             ),
-            SizedBox(
-              width: width * 0.7,
-              child: TextButton(
-                  style: ButtonStyle(
-                      padding:
-                          WidgetStatePropertyAll(EdgeInsets.all(width * 0.03)),
-                      backgroundColor:
-                          WidgetStatePropertyAll(AppColors.textFieldFillColor),
-                      shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)))),
-                  onPressed: () {
-                    //Navigate to students page
-                  },
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'S T U D E N T S',
-                      style: Theme.of(context).textTheme.labelLarge,
-                    ),
-                  )),
-            ),
+  
             SizedBox(
               height: height * 0.4,
             ),
@@ -113,6 +100,7 @@ class _HomePageState extends State<HomePage> {
               child: const Align(
                   alignment: Alignment.bottomCenter, child: Divider()),
             ),
+            SizedBox(height: height * 0.03),
             Align(
               alignment: Alignment.bottomCenter,
               child: SizedBox(

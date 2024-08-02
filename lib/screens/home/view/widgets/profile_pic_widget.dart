@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:attendance_management_system/consts.dart';
 import 'package:attendance_management_system/screens/home/providers/home_page_provider.dart';
 import 'package:flutter/material.dart';

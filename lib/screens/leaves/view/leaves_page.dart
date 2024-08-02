@@ -1,4 +1,5 @@
 import 'package:attendance_management_system/consts.dart';
+import 'package:attendance_management_system/screens/leaves/view/widgets/leaves_page_card.dart';
 import 'package:flutter/material.dart';
 
 class LeavesPage extends StatelessWidget {
@@ -8,11 +9,17 @@ class LeavesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: AppColors.white,
-      body: Center(
-        child: Text('Leaves Page'),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.white,
+        surfaceTintColor: AppColors.white,
+        title: const Text('Leave'),
+        centerTitle: true,
       ),
+      backgroundColor: AppColors.white,
+      body: const Center(
+          child:
+              Align(alignment: Alignment.topCenter, child: LeavesPageCard())),
     );
   }
 }

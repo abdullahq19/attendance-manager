@@ -12,11 +12,13 @@ class AttendancePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
           backgroundColor: AppColors.white,
+          title: Text('Attendance',style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),),
+          centerTitle: true,
           leading: IconButton(
               onPressed: () => Navigator.of(context).pop(),
               icon: const Icon(Icons.arrow_back))),
       backgroundColor: AppColors.white,
-      body: const Center(child: AttendancePageCard()),
+      body: const AttendancePageCard(),
     );
   }
 }

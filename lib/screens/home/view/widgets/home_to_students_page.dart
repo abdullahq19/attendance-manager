@@ -1,4 +1,3 @@
-import 'package:attendance_management_system/consts.dart';
 import 'package:attendance_management_system/screens/students/view/students_page.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +14,7 @@ class HomeToStudentsPage extends StatelessWidget {
         height: height * 0.1,
         padding: EdgeInsets.all(width * 0.05),
         decoration: BoxDecoration(
-            color: AppColors.textFieldFillColor,
+            color: Colors.grey.shade100,
             borderRadius: BorderRadius.circular(15)),
         child: Row(
           children: [

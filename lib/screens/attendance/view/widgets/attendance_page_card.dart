@@ -10,20 +10,23 @@ class AttendancePageCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size(:width, :height) = MediaQuery.sizeOf(context);
-    return SizedBox(
-      width: width * 0.9,
-      height: height * 0.35,
-      child: Card(
-        elevation: 5,
-        color: Colors.grey.shade50,
-        child: const Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AttendancePageHeaderRow(),
-            UsernameText(),
-            MarkPresentButton(),
-            MarkAbsentButton(),
-          ],
+    return Align(
+      alignment: Alignment.topCenter,
+      child: SizedBox(
+        width: width * 0.9,
+        height: height * 0.35,
+        child: Card(
+          elevation: 5,
+          color: Colors.grey.shade50,
+          child: const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AttendancePageHeaderRow(),
+              UsernameText(),
+              MarkPresentButton(),
+              MarkAbsentButton(),
+            ],
+          ),
         ),
       ),
     );

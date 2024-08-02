@@ -1,5 +1,6 @@
 import 'package:attendance_management_system/consts.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class AttendancePageHeaderRow extends StatelessWidget {
   const AttendancePageHeaderRow({super.key});
@@ -16,14 +17,14 @@ class AttendancePageHeaderRow extends StatelessWidget {
           Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Attendance',
+                'Mark Attendance',
                 style: Theme.of(context)
                     .textTheme
-                    .headlineSmall
+                    .titleLarge
                     ?.copyWith(fontWeight: FontWeight.bold),
               )),
           Text(
-            '${currentdateTime.day}/${currentdateTime.month}/${currentdateTime.year}',
+            DateFormat.yMMMd().format(currentdateTime),
             style: Theme.of(context).textTheme.labelLarge,
           ),
         ],

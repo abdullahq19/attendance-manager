@@ -39,7 +39,9 @@ class AppTextontSizes {
 const googleLogoImage = 'assets/images/google.png';
 //Admin login credentials
 const adminEmail = 'admin123@admin.com';
+const adminName = 'Admin Account';
 const adminPassword = 'Admin123';
+//default image for profile pictures
 const defaultImageUrl =
     'https://static.vecteezy.com/system/resources/thumbnails/005/129/844/small_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg';
 
@@ -48,6 +50,22 @@ final currentdateTime = DateTime.now();
 //global function for getting month by month number
 String getMonth() {
   return switch (currentdateTime.month) {
+    1 => 'January',
+    2 => 'February',
+    3 => 'March',
+    4 => 'April',
+    5 => 'May',
+    6 => 'June',
+    7 => 'July',
+    8 => 'August',
+    9 => 'September',
+    10 => 'October',
+    11 => 'November',
+    _ => 'December'
+  };
+}
+String getMonthById(int month) {
+  return switch (month) {
     1 => 'January',
     2 => 'February',
     3 => 'March',

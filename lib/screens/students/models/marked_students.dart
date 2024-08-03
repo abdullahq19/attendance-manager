@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 import 'package:attendance_management_system/consts.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MarkedStudents {
   String name;
@@ -48,7 +49,9 @@ class MarkedStudents {
       email: map['email'] ?? 'No email',
       profilePicUrl: map['profilePicUrl'] ?? defaultImageUrl,
       attendanceStatus: map['attendanceStatus'] ?? 'Unknown',
-      markedAt: map['markedAt'] ?? '',
+      markedAt: map['markedAt'] is Timestamp
+          ? (map['markedAt'] as Timestamp).toDate()
+          : map['markedAt'] as DateTime?,
     );
   }
 

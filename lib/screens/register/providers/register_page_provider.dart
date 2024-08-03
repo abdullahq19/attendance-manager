@@ -84,7 +84,8 @@ class RegisterPageProvider extends ChangeNotifier with FormPagesParentProvider {
         Navigator.of(context).pushNamed(SignInPage.pageName);
         isSigningUp = false;
         notifyListeners();
-        isAdmin = email == adminEmail && password == adminPassword;
+        isAdmin = email == adminEmail && password == adminPassword && name == adminName;
+        isAdmin == true ? log('Admin Registered') : log('User Registerd');
         final newUser = AppUser(
             uid: auth.currentUser!.uid,
             name: name,

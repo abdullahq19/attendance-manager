@@ -46,7 +46,6 @@ class _StudentsPageState extends State<StudentsPage> {
                 final DateTime markedAt = students[index].markedAt!;
                 final time = formatter.format(markedAt);
                 return Container(
-                  padding: EdgeInsets.all(width * 0.01),
                   margin: EdgeInsets.symmetric(
                       horizontal: width * 0.03, vertical: height * 0.005),
                   height: height * 0.1,

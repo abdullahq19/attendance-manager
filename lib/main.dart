@@ -1,6 +1,9 @@
 import 'dart:developer';
+import 'package:attendance_management_system/consts.dart';
 import 'package:attendance_management_system/firebase_options.dart';
 import 'package:attendance_management_system/routes/routes.dart';
+import 'package:attendance_management_system/screens/admin/admin%20screens/all%20attendance/providers/all_attendance_page_provider.dart';
+import 'package:attendance_management_system/screens/admin/admin%20screens/dashboard/view/admin_dashboard_page.dart';
 import 'package:attendance_management_system/screens/attendance/providers/attendance_page_provider.dart';
 import 'package:attendance_management_system/screens/forgot%20password/providers/forgot_pass_page_provider.dart';
 import 'package:attendance_management_system/screens/home/providers/home_page_provider.dart';
@@ -27,7 +30,9 @@ void main() async {
       initialRoute = SignInPage.pageName;
     } else {
       log('User signed in => uid: ${user.uid}');
-      initialRoute = HomePage.pageName;
+      initialRoute = user.email == adminEmail
+          ? AdminDashboardPage.pageName
+          : HomePage.pageName;
     }
   });
   runApp(MultiProvider(providers: [
@@ -54,6 +59,9 @@ void main() async {
     ),
     ChangeNotifierProvider(
       create: (context) => MyLeavesProvider(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => AllAttendancePageProvider(),
     ),
   ], child: const MyApp()));
 }

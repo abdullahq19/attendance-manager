@@ -55,7 +55,6 @@ class SignInButton extends StatelessWidget {
       final signInPageProvider =
           Provider.of<SignInPageProvider>(context, listen: false);
       if (emailController.text.isNotEmpty || passwordController.text.isNotEmpty) {
-        log('one of the fields is not empty');
         if (formKey.currentState!.validate()) {
           log('validation return true');
           await signInPageProvider

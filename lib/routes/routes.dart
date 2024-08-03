@@ -1,3 +1,7 @@
+import 'package:attendance_management_system/screens/admin/admin%20screens/all%20attendance/view/all_attendance_page.dart';
+import 'package:attendance_management_system/screens/admin/admin%20screens/all%20attendance/view/view/all_leaves_page.dart';
+import 'package:attendance_management_system/screens/admin/admin%20screens/all%20students/view/all_students_page.dart';
+import 'package:attendance_management_system/screens/admin/admin%20screens/dashboard/view/admin_dashboard_page.dart';
 import 'package:attendance_management_system/screens/attendance/view/attendance_page.dart';
 import 'package:attendance_management_system/screens/error/view/error_page.dart';
 import 'package:attendance_management_system/screens/forgot%20password/view/forgot_password_page.dart';
@@ -28,6 +32,14 @@ class Routes {
         MaterialPageRoute(builder: (context) => const StudentsPage()),
       MyLeavesPage.pageName =>
         MaterialPageRoute(builder: (context) => const MyLeavesPage()),
+      AdminDashboardPage.pageName =>
+        MaterialPageRoute(builder: (context) => const AdminDashboardPage()),
+      AllAttendancePage.pageName =>
+        MaterialPageRoute(builder: (context) => const AllAttendancePage()),
+      AllLeavesPage.pageName =>
+        MaterialPageRoute(builder: (context) => const AllLeavesPage()),
+      AllStudentsPage.pageName =>
+        MaterialPageRoute(builder: (context) => const AllStudentsPage()),
       _ => MaterialPageRoute(
           builder: (context) => const ErrorPage(),
         )

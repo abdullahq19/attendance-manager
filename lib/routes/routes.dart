@@ -1,5 +1,5 @@
 import 'package:attendance_management_system/screens/admin/admin%20screens/all%20attendance/view/all_attendance_page.dart';
-import 'package:attendance_management_system/screens/admin/admin%20screens/all%20attendance/view/view/all_leaves_page.dart';
+import 'package:attendance_management_system/screens/admin/admin%20screens/all%20leaves/view/all_leaves_page.dart';
 import 'package:attendance_management_system/screens/admin/admin%20screens/all%20students/view/all_students_page.dart';
 import 'package:attendance_management_system/screens/admin/admin%20screens/dashboard/view/admin_dashboard_page.dart';
 import 'package:attendance_management_system/screens/attendance/view/attendance_page.dart';

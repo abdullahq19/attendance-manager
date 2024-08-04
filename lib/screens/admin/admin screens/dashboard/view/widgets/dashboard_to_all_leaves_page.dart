@@ -1,4 +1,4 @@
-import 'package:attendance_management_system/screens/admin/admin%20screens/all%20attendance/view/view/all_leaves_page.dart';
+import 'package:attendance_management_system/screens/admin/admin%20screens/all%20leaves/view/all_leaves_page.dart';
 import 'package:flutter/material.dart';
 
 class DashboardToAllLeavesPageButton extends StatelessWidget {

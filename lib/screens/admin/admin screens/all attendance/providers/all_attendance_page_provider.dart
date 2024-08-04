@@ -14,6 +14,7 @@ class AllAttendancePageProvider extends ChangeNotifier {
 
   Future<void> getAttendanceRecords() async {
     try {
+      log(attendanceByDate.toString());
       fetchingAttendance = true;
       notifyListeners();
 
@@ -32,6 +33,11 @@ class AllAttendancePageProvider extends ChangeNotifier {
         final data = dayDoc.data() as Map<String, dynamic>;
         final List<String> markedEmails =
             List<String>.from(data['markedStudents'] ?? []);
+
+        if (markedEmails.isEmpty) {
+          attendanceByDate = {};
+          notifyListeners();
+        }
 
         List<MarkedStudents> studentsForDay =
             await Future.wait(markedEmails.map((email) async {
@@ -62,18 +68,25 @@ class AllAttendancePageProvider extends ChangeNotifier {
               .get();
 
           if (attendanceDoc.exists) {
-            userData['attendanceStatus'] = attendanceDoc.data()?['status'];
-            Timestamp timestamp =
-                attendanceDoc.data()?['timestamp'] as Timestamp;
-            userData['markedAt'] = timestamp.toDate();
-            notifyListeners();
+            userData['attendanceStatus'] =
+                attendanceDoc.data()?['status'] ?? 'Unknown';
+            Timestamp? timestamp =
+                attendanceDoc.data()?['timestamp'] as Timestamp?;
+            userData['markedAt'] = timestamp?.toDate() ?? DateTime.now();
+          } else {
+            userData['attendanceStatus'] = 'Not marked';
+            userData['markedAt'] = null;
           }
-          log(userData.toString());
           return MarkedStudents.fromMap(userData);
         }));
-        log(studentsForDay.toString());
 
-        attendanceByDate!['$year-$month-$day'] = studentsForDay;
+        studentsForDay = studentsForDay
+            .where((student) => student.markedAt != null)
+            .toList();
+
+        if (studentsForDay.isNotEmpty) {
+          attendanceByDate!['$year-$month-$day'] = studentsForDay;
+        }
         notifyListeners();
       }
 
@@ -117,6 +130,7 @@ class AllAttendancePageProvider extends ChangeNotifier {
         await attendanceDoc.reference.update({"status": selectedValue}).then(
           (value) => Navigator.of(context).pop(),
         );
+        await getAttendanceRecords();
         isUpdatingAttendanceStatus = false;
         notifyListeners();
       } else {
@@ -136,7 +150,18 @@ class AllAttendancePageProvider extends ChangeNotifier {
     try {
       isDeletingAttendanceRecord = true;
       notifyListeners();
-      final query = await _firestore
+
+      final dayDocRef = _firestore
+          .collection('daily-attendance')
+          .doc(student.markedAt!.year.toString())
+          .collection(getMonthById(student.markedAt!.month))
+          .doc(student.markedAt!.day.toString());
+
+      await dayDocRef.update({
+        "markedStudents": FieldValue.arrayRemove([student.email])
+      });
+
+      final attendanceStatusDoc = await _firestore
           .collection('attendance')
           .doc(student.email)
           .collection(student.markedAt!.year.toString())
@@ -144,12 +169,16 @@ class AllAttendancePageProvider extends ChangeNotifier {
           .collection(student.markedAt!.day.toString())
           .get();
 
-      if (query.docs.isNotEmpty) {
-        for (var doc in query.docs) {
-          doc.reference.delete();
-          isDeletingAttendanceRecord = false;
-          notifyListeners();
+      if (attendanceStatusDoc.docs.isNotEmpty) {
+        for (var doc in attendanceStatusDoc.docs) {
+          doc.reference.delete().then(
+                (value) => Navigator.of(context).pop(),
+              );
         }
+        notifyListeners();
+        await getAttendanceRecords();
+        isDeletingAttendanceRecord = false;
+        notifyListeners();
       } else {
         log('Attendance doc does not exists');
         isDeletingAttendanceRecord = false;

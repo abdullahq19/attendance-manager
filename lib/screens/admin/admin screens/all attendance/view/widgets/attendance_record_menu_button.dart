@@ -149,7 +149,7 @@ class AttendanceRecordMenuButton extends StatelessWidget {
                     child: const Text('No')),
                 TextButton(
                     onPressed: () async {
-                      //update value to firestore
+                      //delelte record from to firestore
                       await allAttendancePageProvider
                           .deleteAttendanceRecordOfStudent(
                               context, student, date);
@@ -158,7 +158,7 @@ class AttendanceRecordMenuButton extends StatelessWidget {
               ],
               title: const Text('Delete Attendance'),
               content: allAttendancePageProvider.isDeletingAttendanceRecord
-                  ? const Center(child: CircularProgressIndicator(color: Colors.red))
+                  ? const SizedBox(width: 100, height: 100,child: Center(child: CircularProgressIndicator(color: Colors.red)))
                   : const Text('Do you want to delete this attendance record?'),
             );
           },

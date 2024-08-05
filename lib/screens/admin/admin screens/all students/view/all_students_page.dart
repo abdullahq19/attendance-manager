@@ -22,8 +22,9 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) {
-        Provider.of<AllStudentsPageProvider>(context, listen: false)
-            .getAllCurrentStudents();
+        final provider =
+            Provider.of<AllStudentsPageProvider>(context, listen: false);
+        provider.getAllCurrentStudents();
       },
     );
 
@@ -75,27 +76,38 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
                     decoration: BoxDecoration(
                         color: Colors.grey.shade50,
                         borderRadius: BorderRadius.circular(15)),
-                    child: ListTile(
-                      title: Text(
-                        student.name,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      contentPadding: EdgeInsets.symmetric(
-                          vertical: height * 0.015, horizontal: width * 0.02),
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            student.profilePicUrl ?? defaultImageUrl),
-                        backgroundColor: AppColors.textFieldFillColor,
-                        radius: width * 0.08,
-                      ),
-                      trailing: EditStudentBottomSheetButton(
-                        student: student,
-                        emailController: emailController,
-                        firstNameController: firstNameController,
-                        lastNameController: lastNameController,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        splashColor: Colors.grey.shade50,
+                        onLongPress: () async {
+                          allStudentsPageProvider.updateNumberOfDays(student);
+                          await _showAttendanceDaysBottomSheet();
+                        },
+                        child: ListTile(
+                          title: Text(
+                            student.name,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: height * 0.015,
+                              horizontal: width * 0.02),
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                                student.profilePicUrl ?? defaultImageUrl),
+                            backgroundColor: AppColors.textFieldFillColor,
+                            radius: width * 0.08,
+                          ),
+                          trailing: EditStudentBottomSheetButton(
+                            student: student,
+                            emailController: emailController,
+                            firstNameController: firstNameController,
+                            lastNameController: lastNameController,
+                          ),
+                        ),
                       ),
                     ),
                   );
@@ -105,6 +117,190 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
           },
         ),
       ),
+    );
+  }
+
+  Future<void> _showAttendanceDaysBottomSheet() async {
+    final Size(:height, :width) = MediaQuery.sizeOf(context);
+    await showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.white,
+      enableDrag: true,
+      showDragHandle: true,
+      builder: (context) {
+        return SizedBox(
+          width: width,
+          child: Consumer<AllStudentsPageProvider>(
+            builder: (context, allAttendancePageProvider, child) {
+              return allAttendancePageProvider.isFetchingNumberOfDays
+                  ? const Center(
+                      child: SizedBox(
+                          width: 50,
+                          height: 50,
+                          child:
+                              CircularProgressIndicator(color: Colors.green)),
+                    )
+                  : Padding(
+                      padding: EdgeInsets.only(left: width * 0.05),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Attendance Status',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          Padding(
+                            padding:
+                                EdgeInsets.symmetric(vertical: height * 0.05),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: width * 0.3,
+                                  height: height * 0.05,
+                                  decoration: BoxDecoration(
+                                      color: Colors.green.shade50,
+                                      borderRadius: BorderRadius.circular(15)),
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      'Days present',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall
+                                          ?.copyWith(color: Colors.green, fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:  EdgeInsets.symmetric(horizontal: width * 0.04),
+                                  child: Text('=',style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall
+                                          ?.copyWith(fontWeight: FontWeight.bold),),
+                                ),
+                                Container(
+                                  width: width * 0.1,
+                                  height: height * 0.05,
+                                  decoration: BoxDecoration(
+                                      color: Colors.green.shade50,
+                                      borderRadius: BorderRadius.circular(15)),
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      allAttendancePageProvider.presentDays.toString(),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall
+                                          ?.copyWith(color: Colors.green, fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                width: width * 0.3,
+                                height: height * 0.05,
+                                decoration: BoxDecoration(
+                                    color: Colors.red.shade50,
+                                    borderRadius: BorderRadius.circular(15)),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    'Days absent',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.copyWith(color: Colors.red, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding:  EdgeInsets.symmetric(horizontal: width * 0.04),
+                                child: Text('=',style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.copyWith(fontWeight: FontWeight.bold),),
+                              ),
+                              Container(
+                                width: width * 0.1,
+                                height: height * 0.05,
+                                decoration: BoxDecoration(
+                                    color: Colors.red.shade50,
+                                    borderRadius: BorderRadius.circular(15)),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    allAttendancePageProvider.absentDays.toString(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.copyWith(color: Colors.red, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: height * 0.05),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: width * 0.3,
+                                  height: height * 0.05,
+                                  decoration: BoxDecoration(
+                                      color: Colors.orange.shade50,
+                                      borderRadius: BorderRadius.circular(15)),
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      'Leaves',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall
+                                          ?.copyWith(color: Colors.orange, fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:  EdgeInsets.symmetric(horizontal: width * 0.04),
+                                  child: Text('=',style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall
+                                          ?.copyWith(fontWeight: FontWeight.bold),),
+                                ),
+                                Container(
+                                  width: width * 0.1,
+                                  height: height * 0.05,
+                                  decoration: BoxDecoration(
+                                      color: Colors.orange.shade50,
+                                      borderRadius: BorderRadius.circular(15)),
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      allAttendancePageProvider.studentLeaves.length.toString(),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleSmall
+                                          ?.copyWith(color: Colors.orange, fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+            },
+          ),
+        );
+      },
     );
   }
 }

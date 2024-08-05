@@ -33,7 +33,6 @@ class AllAttendancePageProvider extends ChangeNotifier {
         final data = dayDoc.data() as Map<String, dynamic>;
         final List<String> markedEmails =
             List<String>.from(data['markedStudents'] ?? []);
-
         if (markedEmails.isEmpty) {
           attendanceByDate = {};
           notifyListeners();

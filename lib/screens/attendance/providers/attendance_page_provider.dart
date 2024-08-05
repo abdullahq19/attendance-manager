@@ -83,6 +83,23 @@ class AttendancePageProvider extends ChangeNotifier {
         .collection(currentdateTime.day.toString())
         .doc('attendance-status');
 
+    final querySnapshot = await _firestore
+        .collection('leave-requests')
+        .where('email', isEqualTo: _auth.currentUser!.email)
+        .where('fromDate',
+            isLessThanOrEqualTo: Timestamp.fromDate(DateTime.now()))
+        .where('toDate',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(DateTime.now()))
+        .limit(1)
+        .get();
+
+    // checks if user has requested a leave, if yes then attendance for today is marked and mark attendance button is disabled
+    if (querySnapshot.docs.isNotEmpty) {
+      isMarkedForToday = true;
+      notifyListeners();
+      return;
+    }
+
     // Check if attendance already marked
     final doc = await attendanceRef.get();
     if (doc.exists) {
@@ -92,5 +109,10 @@ class AttendancePageProvider extends ChangeNotifier {
       isMarkedForToday = false;
       notifyListeners();
     }
+  }
+
+  void setIsMarkedForTodayTrue() {
+    isMarkedForToday = true;
+    notifyListeners();
   }
 }

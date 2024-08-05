@@ -29,6 +29,7 @@ class StudentPageProvider extends ChangeNotifier {
         Map<String, dynamic> data = summaryDoc.data() as Map<String, dynamic>;
         List<String> markedEmails =
             List<String>.from(data['markedStudents'] ?? []);
+        notifyListeners();
 
         students = await Future.wait(markedEmails.map((email) async {
           // Fetch user info
@@ -42,6 +43,7 @@ class StudentPageProvider extends ChangeNotifier {
           if (userQuery.docs.isNotEmpty) {
             userData = userQuery.docs.first.data();
             userData['email'] = email;
+            log(email);
           } else {
             log('User document not found for email: $email');
             userData = {'email': email, 'error': 'User info not found'};

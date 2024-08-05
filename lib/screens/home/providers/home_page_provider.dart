@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'dart:math' as math;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -11,7 +12,6 @@ class HomePageProvider extends ChangeNotifier {
   final _firestore = FirebaseFirestore.instance;
   final _storage = FirebaseStorage.instance;
   static const String imageFolderName = 'UserProfileImages/';
-  String imageName = 'image${DateTime.now().millisecondsSinceEpoch}.jpg';
 
   final _picker = ImagePicker();
   bool isPickingImage = false;
@@ -19,17 +19,20 @@ class HomePageProvider extends ChangeNotifier {
   bool isUploadingImage = false;
   bool isImageUploaded = false;
   File? image;
-  String? _imageUrl;
-  String? get imageUrl => _imageUrl;
+  String? imageUrl;
 
   // Sign out the current user
   Future<void> signOut() async {
     await _auth.signOut();
+    imageUrl = null;
+    image = null;
+    notifyListeners();
   }
 
   // picks image from gallery
   Future<void> pickImageFromGallery() async {
     try {
+      log('THIS IS IMAGE FILE: $image');
       var pickedImage = await _picker.pickImage(source: ImageSource.gallery);
       isPickingImage = true;
       notifyListeners();
@@ -48,6 +51,8 @@ class HomePageProvider extends ChangeNotifier {
   Future<void> uploadImageToFirebaseStorage() async {
     try {
       if (image != null) {
+        String imageName =
+            'image${DateTime.now().millisecondsSinceEpoch}${math.Random().nextInt(100000)}.jpg';
         final ref = _storage.ref().child(imageFolderName + imageName);
         final uploadTask = ref.putFile(image!);
         uploadTask.snapshotEvents.listen((taskSnapshot) async {
@@ -58,11 +63,11 @@ class HomePageProvider extends ChangeNotifier {
               break;
             case TaskState.success:
               isImageUploaded = true;
-              _imageUrl = await ref.getDownloadURL();
-              log(imageUrl!);
+              imageUrl = await ref.getDownloadURL();
+              notifyListeners();
               isUploadingImage = false;
               isImagePicked = false;
-              await updateImageUrlToFirestore(_imageUrl!);
+              await updateImageUrlToFirestore(imageUrl!);
               isImageUploaded = false;
               notifyListeners();
               break;
@@ -85,9 +90,43 @@ class HomePageProvider extends ChangeNotifier {
             .where('email', isEqualTo: _auth.currentUser!.email)
             .limit(1)
             .get();
+
         if (snapshot.docs.isNotEmpty) {
           final doc = snapshot.docs.first;
-          doc.reference.update({"profilePicUrl": newImageUrl});
+          String? oldImageUrl = doc.data()['profilePicUrl'];
+
+          // Delete old image if it exists
+          if (oldImageUrl != null) {
+            try {
+              await FirebaseStorage.instance.refFromURL(oldImageUrl).delete();
+            } catch (e) {
+              log('Error deleting old image: $e');
+            }
+          }
+
+          final leavesCollection = await _firestore
+              .collection('leave-requests')
+              .where('email', isEqualTo: _auth.currentUser!.email)
+              .get();
+
+          if (leavesCollection.docs.isNotEmpty) {
+            for (var leave in leavesCollection.docs) {
+              leave.reference.update({"profilePicUrl": newImageUrl});
+              var name = leave.data()['name'].toString();
+              log(name);
+            }
+          }
+        } else {
+          log('No leaves for this user, so profile picture will not be updated');
+        }
+
+        if (snapshot.docs.isNotEmpty) {
+          log('snapshot.docs.toString() => ${snapshot.docs.toString()}');
+          final doc = snapshot.docs.first;
+          await doc.reference.update({"profilePicUrl": newImageUrl});
+          final docsnap = await doc.reference.get();
+          log('Name at every iteration of update pic url: ${docsnap.data()?['name']}');
+          log('pic url at every iteration: ${docsnap.data()?['profilePicUrl']}');
         } else {
           log('Doc does not exists');
         }
@@ -101,7 +140,7 @@ class HomePageProvider extends ChangeNotifier {
 
   // Get current user profile picture url
   Future<void> getCurrentUserProfilePicUrl() async {
-    var snapshot = await _firestore
+    final snapshot = await _firestore
         .collection('users')
         .where('email', isEqualTo: _auth.currentUser!.email)
         .limit(1)
@@ -110,9 +149,11 @@ class HomePageProvider extends ChangeNotifier {
     final doc = snapshot.docs.first;
     log(_auth.currentUser!.email!);
     if (doc.exists) {
-      var user = await doc.reference.get();
+      final user = await doc.reference.get();
       if (user.data()!.containsKey('profilePicUrl')) {
-        _imageUrl = await user.data()!['profilePicUrl'];
+        imageUrl = await user.data()!['profilePicUrl'];
+        log('getCurrentUserProfilePicUrl: $imageUrl');
+        notifyListeners();
         log("Got profile pic url: $imageUrl");
       }
     } else {

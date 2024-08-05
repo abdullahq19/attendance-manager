@@ -45,13 +45,13 @@ class MarkedStudents {
 
   factory MarkedStudents.fromMap(Map<String, dynamic> map) {
     return MarkedStudents(
-      name: map['name']  as String,
-      email: map['email'] as String,
-      profilePicUrl: map['profilePicUrl'] as String ,
-      attendanceStatus: map['attendanceStatus'] as String,
+      name: map['name'] ?? 'Unknown',
+      email: map['email'] ?? 'No email',
+      profilePicUrl: map['profilePicUrl'] ?? defaultImageUrl,
+      attendanceStatus: map['attendanceStatus'] ?? 'Unknown',
       markedAt: map['markedAt'] is Timestamp
-          ? (map['markedAt'] as Timestamp).toDate()
-          : map['markedAt'] as DateTime,
+          ? (map['markedAt'] ?? Timestamp.now()).toDate()
+          : map['markedAt'] ?? DateTime.now(),
     );
   }
 

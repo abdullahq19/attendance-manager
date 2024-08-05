@@ -14,7 +14,6 @@ class RegisterPageProvider extends ChangeNotifier with FormPagesParentProvider {
   bool isSigningUp = false;
   bool isSigningUpWithGoogle = false;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  static const String usersCollection = 'users';
   String? currentUsername = '';
 
 // hide/unhide password for confirm password field
@@ -76,26 +75,38 @@ class RegisterPageProvider extends ChangeNotifier with FormPagesParentProvider {
   Future<bool> registerUser(String email, String password, String name,
       bool isAdmin, BuildContext context) async {
     try {
-      isSigningUp = true;
-      notifyListeners();
-      await auth
-          .createUserWithEmailAndPassword(email: email, password: password)
-          .then((value) async {
-        Navigator.of(context).pushNamed(SignInPage.pageName);
-        isSigningUp = false;
+      final usersCollection = await _firestore
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .limit(1)
+          .get();
+
+      if (usersCollection.docs.isEmpty) {
+        isSigningUp = true;
         notifyListeners();
-        isAdmin = email == adminEmail && password == adminPassword && name == adminName;
-        isAdmin == true ? log('Admin Registered') : log('User Registerd');
-        final newUser = AppUser(
-            uid: auth.currentUser!.uid,
-            name: name,
-            email: email,
-            role: isAdmin ? 'admin' : 'user');
-        final users = _firestore.collection(usersCollection);
-        await users.add(newUser.toMap());
-        currentUsername == null ? newUser.name : auth.currentUser!.displayName;
-        notifyListeners();
-      });
+        await auth
+            .createUserWithEmailAndPassword(email: email, password: password)
+            .then((value) async {
+          Navigator.of(context).pushNamed(SignInPage.pageName);
+          isSigningUp = false;
+          notifyListeners();
+          isAdmin = email == adminEmail &&
+              password == adminPassword &&
+              name == adminName;
+          isAdmin == true ? log('Admin Registered') : log('User Registerd');
+          final newUser = AppUser(
+              uid: auth.currentUser!.uid,
+              name: name,
+              email: email,
+              role: isAdmin ? 'admin' : 'user');
+          final users = _firestore.collection('users');
+          await users.add(newUser.toMap());
+          currentUsername == null
+              ? newUser.name
+              : auth.currentUser!.displayName;
+          notifyListeners();
+        });
+      }
       return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {

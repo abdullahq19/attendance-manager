@@ -10,6 +10,7 @@ class MyTextFormField extends StatelessWidget {
       this.maxLines = 1,
       this.suffix,
       required this.label,
+      this.readOnly = false,
       this.textFieldWidth = double.maxFinite,
       this.focusNode,
       this.validator,
@@ -24,6 +25,7 @@ class MyTextFormField extends StatelessWidget {
   final double textFieldWidth;
   final String? helperText;
   final String label;
+  final bool readOnly;
   final bool obscureText;
   final FocusNode? focusNode;
   final String? Function(String?)? validator;
@@ -47,6 +49,7 @@ class MyTextFormField extends StatelessWidget {
               child: Text(label, style: Theme.of(context).textTheme.labelLarge),
             ),
             TextFormField(
+              readOnly: readOnly,
               focusNode: focusNode,
               keyboardType: keyboardType,
               obscureText: obscureText,

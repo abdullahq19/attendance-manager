@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:attendance_management_system/consts.dart';
 import 'package:attendance_management_system/screens/leaves/models/leave_request_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -51,7 +52,7 @@ class LeavePageProvider extends ChangeNotifier {
           .get();
       Map<String, dynamic> currentUser = querySnapshot.docs.first.data();
       String name = currentUser['name'];
-      String profilePicUrl = currentUser['profilePicUrl'];
+      String profilePicUrl = currentUser['profilePicUrl'] ?? defaultImageUrl;
 
       LeaveRequestModel leaveRequest = LeaveRequestModel(
           email: _auth.currentUser!.email!,
@@ -68,7 +69,6 @@ class LeavePageProvider extends ChangeNotifier {
 
       // checking the requested leave and updating flags
       await checkLeaveRequestForToday();
-
       sendingLeaveRequest = false;
       sentLeaveRequestForToday = true;
       notifyListeners();

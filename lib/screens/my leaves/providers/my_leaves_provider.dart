@@ -30,6 +30,7 @@ class MyLeavesProvider extends ChangeNotifier {
         notifyListeners();
       } else {
         log('Leaves docs are empty');
+        myLeaves = [];
         isFetchingLeaves = false;
         notifyListeners();
       }

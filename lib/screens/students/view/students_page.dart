@@ -18,8 +18,13 @@ class _StudentsPageState extends State<StudentsPage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<StudentPageProvider>(context, listen: false)
-        .getStudentsMarkedTodayWithInfo();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        final studentProvider =
+            Provider.of<StudentPageProvider>(context, listen: false);
+        studentProvider.getStudentsMarkedTodayWithInfo();
+      },
+    );
   }
 
   @override

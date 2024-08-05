@@ -3,6 +3,8 @@ import 'package:attendance_management_system/consts.dart';
 import 'package:attendance_management_system/firebase_options.dart';
 import 'package:attendance_management_system/routes/routes.dart';
 import 'package:attendance_management_system/screens/admin/admin%20screens/all%20attendance/providers/all_attendance_page_provider.dart';
+import 'package:attendance_management_system/screens/admin/admin%20screens/all%20leaves/providers/all_leaves_page_provider.dart';
+import 'package:attendance_management_system/screens/admin/admin%20screens/all%20students/providers/all_students_provider.dart';
 import 'package:attendance_management_system/screens/admin/admin%20screens/dashboard/view/admin_dashboard_page.dart';
 import 'package:attendance_management_system/screens/attendance/providers/attendance_page_provider.dart';
 import 'package:attendance_management_system/screens/forgot%20password/providers/forgot_pass_page_provider.dart';
@@ -62,6 +64,12 @@ void main() async {
     ),
     ChangeNotifierProvider(
       create: (context) => AllAttendancePageProvider(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => AllStudentsPageProvider(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => AllLeavesPageProvider(),
     ),
   ], child: const MyApp()));
 }

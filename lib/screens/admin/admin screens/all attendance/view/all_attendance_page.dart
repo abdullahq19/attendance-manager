@@ -150,7 +150,7 @@ class _AllAttendancePageState extends State<AllAttendancePage> {
                                 ))
                             .toList()),
                   );
-                }else{
+                } else {
                   return const SizedBox.shrink();
                 }
               },

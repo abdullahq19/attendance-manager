@@ -1,5 +1,6 @@
 import 'package:attendance_management_system/consts.dart';
 import 'package:attendance_management_system/screens/app_common_button.dart';
+import 'package:attendance_management_system/screens/attendance/providers/attendance_page_provider.dart';
 import 'package:attendance_management_system/screens/leaves/providers/leave_page_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +31,15 @@ class RequestLeaveButton extends StatelessWidget {
                     ? null
                     : () async {
                         await leavePageProvider
-                            .requestLeave(reasonController.text.trim());
+                            .requestLeave(reasonController.text.trim())
+                            .then(
+                          (value) {
+                            context
+                                .read<AttendancePageProvider>()
+                                .setIsMarkedForTodayTrue();
+                            reasonController.clear();
+                          },
+                        );
                       },
                 child: leavePageProvider.sendingLeaveRequest
                     ? const CircularProgressIndicator(color: Colors.indigo)

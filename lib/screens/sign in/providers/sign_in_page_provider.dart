@@ -19,23 +19,21 @@ class SignInPageProvider extends ChangeNotifier with FormPagesParentProvider {
   // create a new user with email and password
   Future<void> signInWithEmailPassword(
       String email, String password, BuildContext context) async {
-    final homePageProvider =
-        Provider.of<HomePageProvider>(context, listen: false);
     try {
+      isSigningIn = true;
+      notifyListeners();
+      final homePageProvider =
+          Provider.of<HomePageProvider>(context, listen: false);
       final userCollection = await _firestore
           .collection('users')
           .where('email', isEqualTo: email)
           .limit(1)
           .get();
       if (userCollection.docs.isNotEmpty) {
-        isSigningIn = true;
         notifyListeners();
         await auth
             .signInWithEmailAndPassword(email: email, password: password)
             .then((value) async {
-          await homePageProvider.getCurrentUserProfilePicUrl();
-          isSigningIn = false;
-          notifyListeners();
           if (email == adminEmail && password == adminPassword) {
             if (context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -44,9 +42,17 @@ class SignInPageProvider extends ChangeNotifier with FormPagesParentProvider {
               log('Signed in as a Admin');
               Navigator.of(context).pushReplacementNamed(initialRoute);
             }
+          } else {
+            if (context.mounted) {
+              Navigator.of(context).pushReplacementNamed(initialRoute);
+            }
           }
+          await homePageProvider.getCurrentUserProfilePicUrl();
+          isSigningIn = false;
+          notifyListeners();
         });
       } else {
+        isSigningIn = false;
         log('Tried to sign in with a email that does not exist in users collection');
       }
     } on FirebaseAuthException catch (e) {

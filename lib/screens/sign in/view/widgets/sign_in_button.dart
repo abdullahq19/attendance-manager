@@ -54,16 +54,15 @@ class SignInButton extends StatelessWidget {
     try {
       final signInPageProvider =
           Provider.of<SignInPageProvider>(context, listen: false);
-      if (emailController.text.isNotEmpty || passwordController.text.isNotEmpty) {
+      if (emailController.text.isNotEmpty ||
+          passwordController.text.isNotEmpty) {
         if (formKey.currentState!.validate()) {
           log('validation return true');
-          await signInPageProvider
-              .signInWithEmailPassword(emailController.text, passwordController.text, context)
-              .then((value) {
-            emailController.clear();
-            passwordController.clear();
-          });
+          await signInPageProvider.signInWithEmailPassword(
+              emailController.text, passwordController.text, context);
         }
+        emailController.clear();
+        passwordController.clear();
       }
     } catch (e) {
       log(e.toString());

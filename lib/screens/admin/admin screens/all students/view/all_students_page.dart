@@ -67,8 +67,7 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
               return ListView.builder(
                 itemCount: allStudentsPageProvider.students.length,
                 itemBuilder: (BuildContext context, int index) {
-                  final student = allStudentsPageProvider
-                      .students[index]; // List of User Model
+                  final student = allStudentsPageProvider.students[index];
                   return Container(
                     margin: EdgeInsets.symmetric(
                         horizontal: width * 0.03, vertical: height * 0.005),
@@ -79,10 +78,14 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
+                        borderRadius: BorderRadius.circular(15),
                         splashColor: Colors.grey.shade50,
                         onLongPress: () async {
-                          allStudentsPageProvider.updateNumberOfDays(student);
-                          await _showAttendanceDaysBottomSheet();
+                          await Future.wait([
+                            _showAttendanceDaysBottomSheet(),
+                            allStudentsPageProvider
+                                .getStudentAttendanceDaysRecords(student.email)
+                          ]);
                         },
                         child: ListTile(
                           title: Text(
@@ -170,16 +173,22 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleSmall
-                                          ?.copyWith(color: Colors.green, fontWeight: FontWeight.bold),
+                                          ?.copyWith(
+                                              color: Colors.green,
+                                              fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 ),
                                 Padding(
-                                  padding:  EdgeInsets.symmetric(horizontal: width * 0.04),
-                                  child: Text('=',style: Theme.of(context)
-                                          .textTheme
-                                          .titleSmall
-                                          ?.copyWith(fontWeight: FontWeight.bold),),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: width * 0.04),
+                                  child: Text(
+                                    '=',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.copyWith(fontWeight: FontWeight.bold),
+                                  ),
                                 ),
                                 Container(
                                   width: width * 0.1,
@@ -190,11 +199,14 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
                                   child: Align(
                                     alignment: Alignment.center,
                                     child: Text(
-                                      allAttendancePageProvider.presentDays.toString(),
+                                      allAttendancePageProvider.presentDays
+                                          .toString(),
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleSmall
-                                          ?.copyWith(color: Colors.green, fontWeight: FontWeight.bold),
+                                          ?.copyWith(
+                                              color: Colors.green,
+                                              fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 ),
@@ -216,16 +228,22 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
                                     style: Theme.of(context)
                                         .textTheme
                                         .titleSmall
-                                        ?.copyWith(color: Colors.red, fontWeight: FontWeight.bold),
+                                        ?.copyWith(
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ),
                               Padding(
-                                padding:  EdgeInsets.symmetric(horizontal: width * 0.04),
-                                child: Text('=',style: Theme.of(context)
-                                        .textTheme
-                                        .titleSmall
-                                        ?.copyWith(fontWeight: FontWeight.bold),),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: width * 0.04),
+                                child: Text(
+                                  '=',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall
+                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                ),
                               ),
                               Container(
                                 width: width * 0.1,
@@ -236,18 +254,22 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
                                 child: Align(
                                   alignment: Alignment.center,
                                   child: Text(
-                                    allAttendancePageProvider.absentDays.toString(),
+                                    allAttendancePageProvider.absentDays
+                                        .toString(),
                                     style: Theme.of(context)
                                         .textTheme
                                         .titleSmall
-                                        ?.copyWith(color: Colors.red, fontWeight: FontWeight.bold),
+                                        ?.copyWith(
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ),
                             ],
                           ),
                           Padding(
-                            padding: EdgeInsets.symmetric(vertical: height * 0.05),
+                            padding:
+                                EdgeInsets.symmetric(vertical: height * 0.05),
                             child: Row(
                               children: [
                                 Container(
@@ -263,16 +285,22 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleSmall
-                                          ?.copyWith(color: Colors.orange, fontWeight: FontWeight.bold),
+                                          ?.copyWith(
+                                              color: Colors.orange,
+                                              fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 ),
                                 Padding(
-                                  padding:  EdgeInsets.symmetric(horizontal: width * 0.04),
-                                  child: Text('=',style: Theme.of(context)
-                                          .textTheme
-                                          .titleSmall
-                                          ?.copyWith(fontWeight: FontWeight.bold),),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: width * 0.04),
+                                  child: Text(
+                                    '=',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.copyWith(fontWeight: FontWeight.bold),
+                                  ),
                                 ),
                                 Container(
                                   width: width * 0.1,
@@ -283,11 +311,15 @@ class _AllStudentsPageState extends State<AllStudentsPage> {
                                   child: Align(
                                     alignment: Alignment.center,
                                     child: Text(
-                                      allAttendancePageProvider.studentLeaves.length.toString(),
+                                      allAttendancePageProvider
+                                          .studentLeaves.length
+                                          .toString(),
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleSmall
-                                          ?.copyWith(color: Colors.orange, fontWeight: FontWeight.bold),
+                                          ?.copyWith(
+                                              color: Colors.orange,
+                                              fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 ),

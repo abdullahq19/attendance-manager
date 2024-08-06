@@ -14,12 +14,13 @@ class AllAttendancePageProvider extends ChangeNotifier {
 
   Future<void> getAttendanceRecords() async {
     try {
-      log(attendanceByDate.toString());
       fetchingAttendance = true;
       notifyListeners();
 
       final year = currentdateTime.year.toString();
       final month = getMonth();
+
+      attendanceByDate = {};
 
       // Get all day documents for the current month
       final QuerySnapshot dayDocs = await _firestore
@@ -30,12 +31,12 @@ class AllAttendancePageProvider extends ChangeNotifier {
 
       for (var dayDoc in dayDocs.docs) {
         final day = dayDoc.id;
+        log('day num => $day');
         final data = dayDoc.data() as Map<String, dynamic>;
         final List<String> markedEmails =
             List<String>.from(data['markedStudents'] ?? []);
         if (markedEmails.isEmpty) {
-          attendanceByDate = {};
-          notifyListeners();
+          continue;
         }
 
         List<MarkedStudents> studentsForDay =
@@ -82,11 +83,12 @@ class AllAttendancePageProvider extends ChangeNotifier {
         studentsForDay = studentsForDay
             .where((student) => student.markedAt != null)
             .toList();
+        notifyListeners();
 
         if (studentsForDay.isNotEmpty) {
           attendanceByDate!['$year-$month-$day'] = studentsForDay;
+          notifyListeners();
         }
-        notifyListeners();
       }
 
       fetchingAttendance = false;
@@ -166,14 +168,13 @@ class AllAttendancePageProvider extends ChangeNotifier {
           .collection(student.markedAt!.year.toString())
           .doc(getMonthById(student.markedAt!.month))
           .collection(student.markedAt!.day.toString())
+          .doc('attendance-status')
           .get();
 
-      if (attendanceStatusDoc.docs.isNotEmpty) {
-        for (var doc in attendanceStatusDoc.docs) {
-          doc.reference.delete().then(
-                (value) => Navigator.of(context).pop(),
-              );
-        }
+      if (attendanceStatusDoc.exists) {
+        await attendanceStatusDoc.reference.delete().then(
+              (value) => Navigator.of(context).pop(),
+            );
         notifyListeners();
         await getAttendanceRecords();
         isDeletingAttendanceRecord = false;

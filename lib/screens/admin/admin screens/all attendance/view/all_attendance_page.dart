@@ -53,6 +53,9 @@ class _AllAttendancePageState extends State<AllAttendancePage> {
                     .elementAt(index);
                 List<MarkedStudents> students =
                     allAttendancePageProvider.attendanceByDate![date]!;
+                DateTime studentMarkedAt = students.length == 1
+                    ? students[0].markedAt!
+                    : students[index].markedAt!;
                 if (students.isNotEmpty) {
                   return Padding(
                     padding: EdgeInsets.symmetric(
@@ -71,8 +74,8 @@ class _AllAttendancePageState extends State<AllAttendancePage> {
                             duration: const Duration(milliseconds: 500),
                             reverseCurve: Curves.easeInOut,
                             reverseDuration: const Duration(milliseconds: 500)),
-                        title: Text(DateFormat.yMMMMd()
-                            .format(students[index].markedAt!)),
+                        title:
+                            Text(DateFormat.yMMMMd().format(studentMarkedAt)),
                         children: students
                             .map((student) => Container(
                                   margin: EdgeInsets.symmetric(

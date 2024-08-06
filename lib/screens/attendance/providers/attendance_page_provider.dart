@@ -1,8 +1,10 @@
 import 'dart:developer';
 import 'package:attendance_management_system/consts.dart';
+import 'package:attendance_management_system/screens/admin/admin%20screens/all%20students/providers/all_students_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AttendancePageProvider extends ChangeNotifier {
   final _firestore = FirebaseFirestore.instance;
@@ -12,7 +14,7 @@ class AttendancePageProvider extends ChangeNotifier {
   bool isMarkedForToday = false;
 
   // Mark attendance as present or absent
-  Future<void> markAttendance(bool isAbsent) async {
+  Future<void> markAttendance(bool isAbsent, BuildContext context) async {
     try {
       final userEmail = _auth.currentUser!.email;
       final year = currentdateTime.year.toString();
@@ -68,6 +70,7 @@ class AttendancePageProvider extends ChangeNotifier {
       isAbsent ? isMarkingAbsent = false : isMarkingPresent = false;
       notifyListeners();
       await checkAttendanceStatus();
+      if(context.mounted) Provider.of<AllStudentsPageProvider>(context).getStudentAttendanceDaysRecords(userEmail!);
     } catch (e) {
       log('Error marking attendance: ${e.toString()}');
     }

@@ -223,13 +223,16 @@ class AllStudentsPageProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> updateNumberOfDays(AppUser student) async {
+  // Fetches the number of days present/absent/leaves of the student
+  Future<void> getStudentAttendanceDaysRecords(String studentEmail) async {
     try {
       isFetchingNumberOfDays = true;
       notifyListeners();
 
       presentDays = 0;
       absentDays = 0;
+      studentLeaves = [];
+      notifyListeners();
 
       final year = currentdateTime.year.toString();
       final month = getMonthById(currentdateTime.month);
@@ -239,16 +242,17 @@ class AllStudentsPageProvider extends ChangeNotifier {
           .collection('daily-attendance')
           .doc(year)
           .collection(month)
-          .where('markedStudents', arrayContains: student.email)
+          .where('markedStudents', arrayContains: studentEmail)
           .get();
 
       for (var dayDoc in querySnapshot.docs) {
         final day = dayDoc.id;
+        log('day is => $day');
 
         // Check the student's attendance status for this day
         final attendanceDoc = await _firestore
             .collection('attendance')
-            .doc(student.email)
+            .doc(studentEmail)
             .collection(year)
             .doc(month)
             .collection(day)
@@ -261,20 +265,25 @@ class AllStudentsPageProvider extends ChangeNotifier {
           final timestamp = attendanceDoc.data()?['timestamp'] as Timestamp;
           final date = timestamp.toDate();
 
-          if (date.isBefore(currentdateTime) && date.day.toString() == day) {
+          if ((date.isBefore(currentdateTime) ||
+                  date.isAtSameMomentAs(currentdateTime)) &&
+              date.day.toString() == day) {
             if (status == 'present') {
               presentDays++;
+              notifyListeners();
             } else if (status == 'absent') {
               absentDays++;
+              notifyListeners();
             }
           }
         }
       }
 
-      // fetching leaves for this student
+      // fetching number of approved leaves for this student
       final leavesSnapshot = await _firestore
           .collection('leave-requests')
-          .where('email', isEqualTo: student.email)
+          .where('email', isEqualTo: studentEmail)
+          .where('status', isEqualTo: 'approved')
           .get();
 
       if (leavesSnapshot.docs.isNotEmpty) {

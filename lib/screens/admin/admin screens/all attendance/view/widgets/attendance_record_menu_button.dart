@@ -44,7 +44,7 @@ class AttendanceRecordMenuButton extends StatelessWidget {
           return Consumer<AllAttendancePageProvider>(
             builder: (context, allAttendancePageProvider, child) {
               return AlertDialog(
-                actions: [
+                actions: !allAttendancePageProvider.isUpdatingAttendanceStatus ? [
                   TextButton(
                       onPressed: () => Navigator.of(context).pop(),
                       child: const Text('Cancel')),
@@ -56,7 +56,7 @@ class AttendanceRecordMenuButton extends StatelessWidget {
                                 context, student, date);
                       },
                       child: const Text('OK')),
-                ],
+                ] : null,
                 title: const Text('Update Record'),
                 content: allAttendancePageProvider.isUpdatingAttendanceStatus
                     ? SizedBox(

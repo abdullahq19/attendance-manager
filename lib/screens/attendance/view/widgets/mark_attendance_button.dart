@@ -22,7 +22,7 @@ class MarkAttendanceButton extends StatelessWidget {
             onPressed: attendancePageProvider.isMarkedForToday
                 ? null
                 : () async {
-                    await attendancePageProvider.markAttendance(isAbsent);
+                    await attendancePageProvider.markAttendance(isAbsent, context);
                   },
             color: isAbsent ? Colors.red.shade50 : AppColors.blue50,
             child: _onAttendanceMarkedButtonPressed(

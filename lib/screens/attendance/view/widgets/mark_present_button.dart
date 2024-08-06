@@ -21,7 +21,7 @@ class MarkPresentButton extends StatelessWidget {
             onPressed: attendancePageProvider.isMarkedForToday
                 ? null
                 : () async {
-                    await attendancePageProvider.markAttendance(false);
+                    await attendancePageProvider.markAttendance(false, context);
                   },
             color: AppColors.blue50,
             child: _onAttendanceMarkedButtonPressed(

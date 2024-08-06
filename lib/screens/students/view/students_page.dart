@@ -34,7 +34,7 @@ class _StudentsPageState extends State<StudentsPage> {
       appBar: AppBar(
         backgroundColor: AppColors.white,
         surfaceTintColor: AppColors.white,
-        title: const Text('Students'),
+        title: const Text('Students Today'),
         centerTitle: true,
       ),
       backgroundColor: AppColors.white,
